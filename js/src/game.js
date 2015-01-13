@@ -1,54 +1,74 @@
-define(['phaser', 'lodash', 'candy'], function(Phaser, _, Candy){
+define(['phaser', 'lodash', 'candy', 'worldmap'], function(Phaser, _, Candy, WorldMap){
 
-    var SimSovietApp = function(h, w, mode, targetElement){
+    //Shitty Globals for Google WebFonts
+    //  The Google WebFont Loader will look for this object, so create it before loading the script.
+    WebFontConfig = {
+        //  'active' means all requested fonts have finished loading
+        //  We set a 1 second delay before calling 'createText'.
+        //  For some reason if we don't the browser cannot render the text the first time it's created.
+        active: function () {
+            window.setTimeout(function(){window.fontLibraryReady = true; console.log('fonts loaded!')}, 1000);
+        },
+
+        //  The Google Fonts we want to load (specify as many as you like in the array)
+        google: {
+            families: ['Press Start 2P']
+        }
+    };
+
+    var SimperialismApp = function(h, w, mode, targetElement){
         this.gameInstance = new Phaser.Game(h, w, mode, targetElement,{
-            preload: SimSovietApp.preload,
-            create: SimSovietApp.load,
-            update: SimSovietApp.update,
-            render: SimSovietApp.render
+            preload: this.preload,
+            create: this.load,
+            update: this.update
         });
     };
 
-    SimSovietApp.prototype = {
+    SimperialismApp.prototype = {
 
         preload: function () {
             //Load all assets here
             //this.gameInstance.load.image('target', 'res/sprite/target.png');
             //this.gameInstance.load.spritesheet('torso', 'res/img/torso2.png', 32, 32);
             //  Load the Google WebFont Loader script
-            this.gameInstance.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
+            this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
         },
 
         load: function () {
             //1st time load
-            this.gameInstance.world.setBounds(0, 0, 1024, 768);
+            this.world.setBounds(0, 0, 1024, 768);
+            this.worldMap = new WorldMap(this);
 
             //Base sprite
-            this.groundSprite = this.gameInstance.add.sprite(0, 0, 'board');
+            this.groundSprite = this.add.sprite(0, 0, 'board');
             this.groundSprite.alpha = 0;
-            this.groundSprite.fadeIn = this.gameInstance.add.tween(this.groundSprite)
+            this.groundSprite.fadeIn = this.add.tween(this.groundSprite)
                 .to({alpha: 0.75}, 2000, Phaser.Easing.Linear.None);
             this.groundSprite.fadeIn.onComplete.addOnce(function () {
-                this.board = new Board(this.gameInstance);
                 this.inGame = true;
+                this.worldMap.transtionTo();
             }, this);
 
             //Keyboard init
             //this.cursors = this.gameInstance.input.keyboard.createCursorKeys();
 
             //Camera init
-            this.gameInstance.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
-            this.setUpIntro();
+            this.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
+            var that = this;
+            this.fontInterval = window.setInterval(function(){
+                that.setUpIntro();
+            }, 500);
         },
 
         update: function () {
-            if (this.board) this.board.update();
+            if (this.worldMap) this.worldMap.update();
         },
 
         setUpIntro: function () {
+            window.clearInterval(this.fontInterval);
             Candy.drawIntro(this.gameInstance);
-            this.gameInstance.camera.focusOnXY(0, 0);
-            this.gameInstance.input.onDown.add(this.startNewGame(), this);
+            this.camera.focusOnXY(0, 0);
+            this.input.onDown.add(this.startNewGame(), this);
         },
 
         startNewGame: function () {
@@ -63,9 +83,8 @@ define(['phaser', 'lodash', 'candy'], function(Phaser, _, Candy){
         runLoss: function () {
 
         }
-
     };
 
-    return SimSovietApp;
+    return SimperialismApp;
 });
 

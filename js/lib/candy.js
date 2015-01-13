@@ -1,7 +1,20 @@
 define(['phaser'], function(Phaser){
     var Candy = {};
     Candy.tooltips = {};
-
+    Candy.gameBoyPalette = {
+        lightBrown: '#e6d69c',
+        mediumBrown: '#b4a56a',
+        darkBrown: '#7b7162',
+        extraDarkBrown: '#393829',
+        extraDarkBlueGreen: '#183030',
+        darkBlueGreen: '#507868',
+        blueGreen: '#a8c0b0',
+        lightBlueGreen: '#e0f0e8',
+        lightGreen: '#d7e894',
+        green: '#aec440',
+        darkGreen: '#527f39',
+        extraDarkGreen: '#204631'
+    };
     Candy.drawTooltip = function (phaserInstance, x, y, text, fontSiez, delay) {
         if (!Candy.tooltips[text]) {
             Candy.tooltips[text] = phaserInstance.add.text(x, y, text);
@@ -24,9 +37,9 @@ define(['phaser'], function(Phaser){
         textObj.wordWrapWidth = 700;
         textObj.font = 'Press Start 2P';
         textObj.fontSize = props.fontSiez ? props.fontSiez : 8;
-        textObj.fill = '#FFFFFF';
+        textObj.fill = props.fill ? props.fill : '#FFFFFF';
         textObj.align = 'center';
-        textObj.stroke = '#000000';
+        textObj.stroke = props.stroke ? props.stroke : '#000000';
         textObj.strokeThickness = 2;
         textObj.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
     };
