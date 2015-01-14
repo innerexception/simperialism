@@ -1,4 +1,4 @@
-define(['phaser', 'lodash', 'candy', 'worldmap'], function(Phaser, _, Candy, WorldMap){
+define(['phaser', 'lodash', 'candy', 'worldmap', 'provinceData'], function(Phaser, _, Candy, WorldMap, ProvinceData){
 
     //Shitty Globals for Google WebFonts
     //  The Google WebFont Loader will look for this object, so create it before loading the script.
@@ -22,7 +22,7 @@ define(['phaser', 'lodash', 'candy', 'worldmap'], function(Phaser, _, Candy, Wor
         //context in these functions is the PHASER OBJECT not our object
         this.gameInstance = new Phaser.Game(h, w, mode, targetElement,{
             preload: this.preload,
-            create: this.load,
+            create: this.phaserLoad,
             update: this.update,
             loadComplete: loadingSignal
         });
@@ -33,12 +33,17 @@ define(['phaser', 'lodash', 'candy', 'worldmap'], function(Phaser, _, Candy, Wor
         preload: function () {
             //Load all assets here
             this.load.image('mapBackground', 'res/sprite/mapBG.png');
-            //this.gameInstance.load.spritesheet('torso', 'res/img/torso2.png', 32, 32);
+            this.load.spritesheet('intelligencia_unit_topdown', 'res/sprite/intelligencia_unit_topdown.png', 32, 32);
+            _.each(ProvinceData, function(province){
+                this.load.tilemap(province.name+'_map', 'res/tilemaps/'+province.name+'_map.json', null, Phaser.Tilemap.TILED_JSON);
+            }, this);
+            this.load.image('base_tiles', 'res/sprite/base_tiles.png');
+            this.load.image('surface_tiles', 'res/sprite/surface_tiles.png');
             //  Load the Google WebFont Loader script
             this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
         },
 
-        load: function () {
+        phaserLoad: function () {
             //1st time load
             this.world.setBounds(0, 0, 1024, 768);
             //Camera init

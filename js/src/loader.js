@@ -6,6 +6,7 @@ require.config({
         'candy': 'lib/candy',
         'simperialismApp': 'src/game',
         'worldmap': 'src/worldmap',
+        'province': 'src/province',
         'provinceData': 'src/provinceData'
     },
     shim: {
