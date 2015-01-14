@@ -19,6 +19,7 @@ define(['phaser', 'lodash', 'candy', 'worldmap'], function(Phaser, _, Candy, Wor
     var SimperialismApp = function(h, w, mode, targetElement){
         var loadingSignal = new Phaser.Signal();
         loadingSignal.add(this.appLoad, this);
+        //context in these functions is the PHASER OBJECT not our object
         this.gameInstance = new Phaser.Game(h, w, mode, targetElement,{
             preload: this.preload,
             create: this.load,
@@ -53,12 +54,12 @@ define(['phaser', 'lodash', 'candy', 'worldmap'], function(Phaser, _, Candy, Wor
         },
 
         update: function () {
-            if (this.worldMap) this.worldMap.update();
+            if (this.game.worldMap) this.game.worldMap.update();
         },
 
         setUpIntro: function () {
 
-            this.worldMap = new WorldMap(this.gameInstance);
+            this.gameInstance.worldMap = new WorldMap(this.gameInstance);
 
             //Base sprite
             this.groundSprite = this.gameInstance.add.sprite(0, 0, 'mapBackground');
@@ -67,7 +68,7 @@ define(['phaser', 'lodash', 'candy', 'worldmap'], function(Phaser, _, Candy, Wor
                 .to({alpha: 0.75}, 2000, Phaser.Easing.Linear.None);
             this.groundSprite.fadeIn.onComplete.addOnce(function () {
                 this.inGame = true;
-                this.worldMap.transtionTo();
+                this.gameInstance.worldMap.transtionTo();
             }, this);
 
             //Keyboard init
