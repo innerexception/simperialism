@@ -62,12 +62,12 @@ define(['phaser'], function(Phaser){
             wait ? Candy.tooltips[text].bounce.delay(wait).start() : Candy.tooltips[text].bounce.start();
 
             if(!Candy.messageBackgroundSprite){
-                var bmp = phaserInstance.add.bitmapData(800, 600);
+                var bmp = phaserInstance.add.bitmapData(1024, 768);
                 bmp.ctx.beginPath();
                 bmp.ctx.lineWidth = '300';
                 bmp.ctx.strokeStyle = 'rgba(55,55,55,0.5)';
-                bmp.ctx.moveTo(0, 300);
-                bmp.ctx.lineTo(800, 300);
+                bmp.ctx.moveTo(0, 384);
+                bmp.ctx.lineTo(1024, 384);
                 bmp.ctx.stroke();
                 bmp.ctx.closePath();
                 Candy.messageBackgroundSprite = phaserInstance.add.sprite(-800, 300, bmp);
@@ -110,11 +110,10 @@ define(['phaser'], function(Phaser){
     };
 
     Candy.clearIntro = function (phaserInstance) {
-        phaserInstance.input.onDown.remove(this.removeLogo, this);
-        Candy.logo.flicker = this.gameInstance.add.tween(this.logo);
+        Candy.logo.flicker = phaserInstance.add.tween(this.logo);
         Candy.logo.flicker.to({alpha: 0}, 50, Phaser.Easing.Linear.None, true, 0, 40);
         Candy.logo.flicker.start();
-        Candy.logoSub.flicker = this.gameInstance.add.tween(this.logoSub);
+        Candy.logoSub.flicker = phaserInstance.add.tween(this.logoSub);
         Candy.logoSub.flicker.to({alpha: 0}, 50, Phaser.Easing.Linear.None, true, 0, 40);
         Candy.logoSub.flicker.start();
     };

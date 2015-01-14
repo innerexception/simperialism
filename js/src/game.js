@@ -17,10 +17,13 @@ define(['phaser', 'lodash', 'candy', 'worldmap'], function(Phaser, _, Candy, Wor
     };
 
     var SimperialismApp = function(h, w, mode, targetElement){
+        var loadingSignal = new Phaser.Signal();
+        loadingSignal.add(this.appLoad, this);
         this.gameInstance = new Phaser.Game(h, w, mode, targetElement,{
             preload: this.preload,
             create: this.load,
-            update: this.update
+            update: this.update,
+            loadComplete: loadingSignal
         });
     };
 
@@ -28,7 +31,7 @@ define(['phaser', 'lodash', 'candy', 'worldmap'], function(Phaser, _, Candy, Wor
 
         preload: function () {
             //Load all assets here
-            //this.gameInstance.load.image('target', 'res/sprite/target.png');
+            this.load.image('mapBackground', 'res/sprite/mapBG.png');
             //this.gameInstance.load.spritesheet('torso', 'res/img/torso2.png', 32, 32);
             //  Load the Google WebFont Loader script
             this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
@@ -37,12 +40,30 @@ define(['phaser', 'lodash', 'candy', 'worldmap'], function(Phaser, _, Candy, Wor
         load: function () {
             //1st time load
             this.world.setBounds(0, 0, 1024, 768);
-            this.worldMap = new WorldMap(this);
+            //Camera init
+            this.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
+            this.loadComplete.dispatch();
+        },
+
+        appLoad: function(){
+            var that = this;
+            this.fontInterval = window.setInterval(function(){
+                if(window.fontLibraryReady)that.setUpIntro();
+            }, 500);
+        },
+
+        update: function () {
+            if (this.worldMap) this.worldMap.update();
+        },
+
+        setUpIntro: function () {
+
+            this.worldMap = new WorldMap(this.gameInstance);
 
             //Base sprite
-            this.groundSprite = this.add.sprite(0, 0, 'board');
+            this.groundSprite = this.gameInstance.add.sprite(0, 0, 'mapBackground');
             this.groundSprite.alpha = 0;
-            this.groundSprite.fadeIn = this.add.tween(this.groundSprite)
+            this.groundSprite.fadeIn = this.gameInstance.add.tween(this.groundSprite)
                 .to({alpha: 0.75}, 2000, Phaser.Easing.Linear.None);
             this.groundSprite.fadeIn.onComplete.addOnce(function () {
                 this.inGame = true;
@@ -52,23 +73,10 @@ define(['phaser', 'lodash', 'candy', 'worldmap'], function(Phaser, _, Candy, Wor
             //Keyboard init
             //this.cursors = this.gameInstance.input.keyboard.createCursorKeys();
 
-            //Camera init
-            this.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
-            var that = this;
-            this.fontInterval = window.setInterval(function(){
-                that.setUpIntro();
-            }, 500);
-        },
-
-        update: function () {
-            if (this.worldMap) this.worldMap.update();
-        },
-
-        setUpIntro: function () {
             window.clearInterval(this.fontInterval);
             Candy.drawIntro(this.gameInstance);
-            this.camera.focusOnXY(0, 0);
-            this.input.onDown.add(this.startNewGame(), this);
+            this.gameInstance.camera.focusOnXY(0, 0);
+            this.gameInstance.input.onDown.addOnce(this.startNewGame, this);
         },
 
         startNewGame: function () {
@@ -83,6 +91,7 @@ define(['phaser', 'lodash', 'candy', 'worldmap'], function(Phaser, _, Candy, Wor
         runLoss: function () {
 
         }
+
     };
 
     return SimperialismApp;
