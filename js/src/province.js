@@ -30,12 +30,10 @@ define(['candy'], function(Candy){
            this.nameText.scale.x = 0.0001;
            this.nameText.scale.y = 0.0001;
 
-           this.tileMap.destroy();
-           this.layer.destroy();
-           this.player.destroy();
+           this.resetDrawingContext();
 
            this.tileMap = this.phaserInstance.add.tilemap(this.name+'_map');
-           this.tileMap.addTilesetImage('province_tiles', 'province_tiles');
+           this.tileMap.addTilesetImage('surface_plains', 'surface_plains');
            this.layer = this.tileMap.createLayer('surface');
            this.layer.resizeWorld();
            this.tileMap.setCollision(1,2);
@@ -52,9 +50,7 @@ define(['candy'], function(Candy){
            this.phaserInstance.camera.follow(this.player);
        },
        createBaseView: function(){
-           this.tileMap.destroy();
-           this.layer.destroy();
-           this.player.destroy();
+           this.resetDrawingContext();
 
            this.tileMap = this.phaserInstance.add.tilemap('base_map');
            this.tileMap.addTilesetImage('base_tiles', 'base_tiles');
@@ -72,6 +68,13 @@ define(['candy'], function(Candy){
            this.phaserInstance.physics.p2.enable(this.player);
            this.player.body.fixedRotation = true;
            this.phaserInstance.camera.follow(this.player);
+       },
+       resetDrawingContext: function(){
+           if(this.tileMap){
+               this.tileMap.destroy();
+               this.layer.destroy();
+               this.player.destroy();
+           }
        }
    };
 

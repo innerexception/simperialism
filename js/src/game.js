@@ -38,7 +38,7 @@ define(['phaser', 'lodash', 'candy', 'worldmap', 'provinceData'], function(Phase
                 this.load.tilemap(province.name+'_map', 'res/tilemaps/'+province.name+'_map.json', null, Phaser.Tilemap.TILED_JSON);
             }, this);
             this.load.image('base_tiles', 'res/sprite/base_tiles.png');
-            this.load.image('surface_tiles', 'res/sprite/surface_tiles.png');
+            this.load.image('surface_plains', 'res/sprite/surface_plains.png');
             //  Load the Google WebFont Loader script
             this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
         },
@@ -49,6 +49,7 @@ define(['phaser', 'lodash', 'candy', 'worldmap', 'provinceData'], function(Phase
             //Camera init
             this.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
             this.loadComplete.dispatch();
+            this.physics.startSystem(Phaser.Physics.P2JS);
         },
 
         appLoad: function(){

@@ -1,7 +1,7 @@
 define(['candy'], function(Candy){
    return [
        {
-           name: 'Bratlslava',
+           name: 'Bratislava',
            edges:[
                {lineWidth:4, color:Candy.gameBoyPalette.darkBlueGreen, lineDash: [20,6,20], startX:40, startY:35, endX:120, endY:60},
                {lineWidth:4, color:Candy.gameBoyPalette.darkBlueGreen, lineDash: [20,6,20], startX:120, startY:60, endX:140, endY:160},
@@ -66,7 +66,7 @@ define(['candy'], function(Candy){
            ]
        },
        {
-           name: 'Macondo',
+           name: 'Bergberg',
            edges:[
                {lineWidth:2, color:Candy.gameBoyPalette.darkBlueGreen, lineDash: [6,6,2], startX:210, startY:330, endX:280, endY:300},
                {lineWidth:2, color:Candy.gameBoyPalette.darkBlueGreen, lineDash: [6,6,2], startX:280, startY:300, endX:380, endY:420},
@@ -75,7 +75,7 @@ define(['candy'], function(Candy){
            ]
        },
        {
-           name: 'Macondo',
+           name: 'Townberg',
            edges:[
                {lineWidth:2, color:Candy.gameBoyPalette.darkBlueGreen, lineDash: [6,6,2], startX:90, startY:540, endX:170, endY:580},
                {lineWidth:2, color:Candy.gameBoyPalette.darkBlueGreen, lineDash: [6,6,2], startX:170, startY:580, endX:260, endY:580},
@@ -84,7 +84,7 @@ define(['candy'], function(Candy){
            ]
        },
        {
-           name: 'Macondo',
+           name: 'Name',
            edges:[
                {lineWidth:2, color:Candy.gameBoyPalette.darkBlueGreen, lineDash: [6,6,2], startX:150, startY:660, endX:260, endY:580},
                {lineWidth:2, color:Candy.gameBoyPalette.darkBlueGreen, lineDash: [6,6,2], startX:260, startY:580, endX:310, endY:660},
