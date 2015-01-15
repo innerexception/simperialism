@@ -57,6 +57,7 @@ define(['lodash', 'provinceData', 'candy', 'province'], function(_, ProvinceData
             this.logo.dissapearTween.start();
             this.clearMap();
             this.updateMap = false;
+            this.phaserInstance.input.onDown.remove(this.worldMapMouseDown, this);
         },
         transtionTo: function(){
             console.log('drawing map');

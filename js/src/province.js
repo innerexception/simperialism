@@ -38,13 +38,13 @@ define(['candy'], function(Candy){
            this.layer = this.tileMap.createLayer('surface');
            this.tileMap.createLayer('doodads');
            this.layer.resizeWorld();
-           this.tileMap.setCollision(6);
+           this.tileMap.setCollisionBetween(9, 11);
            this.phaserInstance.physics.p2.convertTilemap(this.tileMap, this.layer);
 
            this.player = this.phaserInstance.add.sprite(100, 200, 'intelligencia_surface_unit');
-           this.player.animations.add('left', [0, 1, 2, 3], 10, true);
-           this.player.animations.add('turn', [4], 20, true);
-           this.player.animations.add('right', [5, 6, 7, 8], 10, true);
+           //this.player.animations.add('left', [0, 1, 2, 3], 10, true);
+           //this.player.animations.add('turn', [4], 20, true);
+           //this.player.animations.add('right', [5, 6, 7, 8], 10, true);
 
            this.phaserInstance.physics.p2.enable(this.player);
            this.player.body.fixedRotation = true;
