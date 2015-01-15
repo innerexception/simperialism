@@ -34,13 +34,14 @@ define(['candy'], function(Candy){
 
            this.tileMap = this.phaserInstance.add.tilemap(this.name+'_map');
            this.tileMap.addTilesetImage('surface_plains', 'surface_plains');
+           this.tileMap.addTilesetImage('base', 'base');
            this.layer = this.tileMap.createLayer('surface');
+           this.tileMap.createLayer('doodads');
            this.layer.resizeWorld();
-           this.tileMap.setCollision(1,2);
+           this.tileMap.setCollision(6);
            this.phaserInstance.physics.p2.convertTilemap(this.tileMap, this.layer);
 
-           this.player = this.phaserInstance.add.sprite(100, 200, 'intelligencia_unit_topdown');
-           this.player.tint = Candy.gameBoyPalette.green;
+           this.player = this.phaserInstance.add.sprite(100, 200, 'intelligencia_surface_unit');
            this.player.animations.add('left', [0, 1, 2, 3], 10, true);
            this.player.animations.add('turn', [4], 20, true);
            this.player.animations.add('right', [5, 6, 7, 8], 10, true);

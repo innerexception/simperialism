@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b1f1283e-c0ce-419c-9d3e-e3717ec05e4c" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/tilemaps/Bratislava_map.json" afterPath="$PROJECT_DIR$/res/tilemaps/Bratislava_map.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/src/game.js" afterPath="$PROJECT_DIR$/js/src/game.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/src/province.js" afterPath="$PROJECT_DIR$/js/src/province.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/src/provinceData.js" afterPath="$PROJECT_DIR$/js/src/provinceData.js" />
     </list>
     <ignored path="simperialism.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -71,8 +71,8 @@
       <file leaf-file-name="province.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/src/province.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.08108108" vertical-offset="528" max-vertical-offset="1305">
-              <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.9034749" vertical-offset="168" max-vertical-offset="1320">
+              <caret line="58" column="36" selection-start-line="58" selection-start-column="36" selection-end-line="58" selection-end-column="36" />
               <folding />
             </state>
           </provider>
@@ -81,10 +81,10 @@
       <file leaf-file-name="game.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/src/game.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="240" max-vertical-offset="1605">
-              <caret line="38" column="21" selection-start-line="38" selection-start-column="21" selection-end-line="38" selection-end-column="21" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="180" max-vertical-offset="1605">
+              <caret line="39" column="59" selection-start-line="39" selection-start-column="59" selection-end-line="39" selection-end-column="59" />
               <folding>
-                <element signature="e#2480#2666#0" expanded="false" />
+                <element signature="e#2468#2654#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -407,7 +407,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="483" max-vertical-offset="1335">
           <caret line="75" column="0" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
           <folding>
-            <element signature="e#2480#2666#0" expanded="false" />
+            <element signature="e#2468#2654#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -465,7 +465,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="1035" max-vertical-offset="1575">
           <caret line="69" column="41" selection-start-line="69" selection-start-column="41" selection-end-line="69" selection-end-column="41" />
           <folding>
-            <element signature="e#2480#2666#0" expanded="false" />
+            <element signature="e#2468#2654#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -523,7 +523,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1632">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#2480#2666#0" expanded="false" />
+            <element signature="e#2468#2654#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -553,14 +553,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/lib/phaser.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33260155" vertical-offset="506076" max-vertical-offset="1381505">
-          <caret line="29815" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -605,20 +597,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/js/lib/phaser.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33333334" vertical-offset="849401" max-vertical-offset="1218975">
+          <caret line="56672" column="4" selection-start-line="56672" selection-start-column="4" selection-end-line="56672" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/js/src/game.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="240" max-vertical-offset="1605">
-          <caret line="38" column="21" selection-start-line="38" selection-start-column="21" selection-end-line="38" selection-end-column="21" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="180" max-vertical-offset="1605">
+          <caret line="39" column="59" selection-start-line="39" selection-start-column="59" selection-end-line="39" selection-end-column="59" />
           <folding>
-            <element signature="e#2480#2666#0" expanded="false" />
+            <element signature="e#2468#2654#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/src/province.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.08108108" vertical-offset="528" max-vertical-offset="1305">
-          <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.9034749" vertical-offset="168" max-vertical-offset="1320">
+          <caret line="58" column="36" selection-start-line="58" selection-start-column="36" selection-end-line="58" selection-end-column="36" />
           <folding />
         </state>
       </provider>

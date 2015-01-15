@@ -33,11 +33,11 @@ define(['phaser', 'lodash', 'candy', 'worldmap', 'provinceData'], function(Phase
         preload: function () {
             //Load all assets here
             this.load.image('mapBackground', 'res/sprite/mapBG.png');
-            this.load.spritesheet('intelligencia_unit_topdown', 'res/sprite/intelligencia_unit_topdown.png', 32, 32);
+            this.load.spritesheet('intelligencia_surface_unit', 'res/sprite/intelligencia_surface_unit.png', 16, 16);
             _.each(ProvinceData, function(province){
                 this.load.tilemap(province.name+'_map', 'res/tilemaps/'+province.name+'_map.json', null, Phaser.Tilemap.TILED_JSON);
             }, this);
-            this.load.image('base_tiles', 'res/sprite/base_tiles.png');
+            this.load.image('base', 'res/sprite/base.png');
             this.load.image('surface_plains', 'res/sprite/surface_plains.png');
             //  Load the Google WebFont Loader script
             this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
