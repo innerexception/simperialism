@@ -94,7 +94,7 @@ define(['phaser'], function(Phaser){
     };
 
     Candy.drawIntro = function(phaserInstance){
-        Candy.logo = phaserInstance.add.text(400, 0, "Oligopoly");
+        Candy.logo = phaserInstance.add.text(400, 0, "sImperialism");
         Candy.setTextProps(Candy.logo, {fontSiez:48});
 
         Candy.logo.bounce = phaserInstance.add.tween(Candy.logo);

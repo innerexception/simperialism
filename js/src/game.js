@@ -67,16 +67,6 @@ define(['phaser', 'lodash', 'candy', 'worldmap', 'provinceData'], function(Phase
 
             this.gameInstance.worldMap = new WorldMap(this.gameInstance);
 
-            //Base sprite
-            this.groundSprite = this.gameInstance.add.sprite(0, 0, 'mapBackground');
-            this.groundSprite.alpha = 0;
-            this.groundSprite.fadeIn = this.gameInstance.add.tween(this.groundSprite)
-                .to({alpha: 0.75}, 2000, Phaser.Easing.Linear.None);
-            this.groundSprite.fadeIn.onComplete.addOnce(function () {
-                this.inGame = true;
-                this.gameInstance.worldMap.transtionTo();
-            }, this);
-
             //Keyboard init
             //this.cursors = this.gameInstance.input.keyboard.createCursorKeys();
 
@@ -88,7 +78,7 @@ define(['phaser', 'lodash', 'candy', 'worldmap', 'provinceData'], function(Phase
 
         startNewGame: function () {
             Candy.clearIntro(this.gameInstance);
-            this.groundSprite.fadeIn.start();
+            this.gameInstance.worldMap.transitionTo();
         },
 
         runVictory: function () {

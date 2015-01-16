@@ -4,6 +4,19 @@ define(['lodash', 'provinceData', 'candy', 'province'], function(_, ProvinceData
         _.each(ProvinceData, function(province){
             this.provinces.push(new Province(province, phaserInstance));
         }, this);
+        this.phaserInstance = phaserInstance;
+
+        //Base sprite
+        this.groundSprite = this.phaserInstance.add.sprite(0, 0, 'mapBackground');
+        this.groundSprite.alpha = 0;
+        this.groundSprite.fadeIn = this.phaserInstance.add.tween(this.groundSprite)
+            .to({alpha: 0.75}, 2000, Phaser.Easing.Linear.None);
+        //this.groundSprite.fadeIn.onComplete.addOnce(function () {
+        //    this.transitionTo();
+        //}, this);
+        this.groundSprite.fadeOut = this.phaserInstance.add.tween(this.groundSprite)
+            .to({alpha:0}, 2000, Phaser.Easing.Linear.None);
+
         this.logo = phaserInstance.add.text(phaserInstance.world.width-200, 100,'PANAMANISTAN');
         this.logo.scale.x = 0.0001;
         this.logo.scale.y = 0.0001;
@@ -16,12 +29,12 @@ define(['lodash', 'provinceData', 'candy', 'province'], function(_, ProvinceData
         this.logo.dissapearTween = phaserInstance.add.tween(this.logo.scale)
             .to({x:0.0001, y:0.0001}, 500, Phaser.Easing.Bounce.Out);
 
-        this.phaserInstance = phaserInstance;
         this.mapBmp = this.phaserInstance.add.bitmapData(1024, 768);
 
         this.phaserInstance.input.onDown.add(this.worldMapMouseDown, this);
 
         this.updateMap = true;
+
     };
     worldMap.prototype = {
         update: function(){
@@ -55,14 +68,20 @@ define(['lodash', 'provinceData', 'candy', 'province'], function(_, ProvinceData
                 nextTransitionDelegate.apply(context);
             }, this);
             this.logo.dissapearTween.start();
+            this.groundSprite.fadeOut.start();
+            this.mapSprite.fadeOut.start();
             this.clearMap();
             this.updateMap = false;
             this.phaserInstance.input.onDown.remove(this.worldMapMouseDown, this);
+            console.log('leaving map');
         },
-        transtionTo: function(){
+        transitionTo: function(){
             console.log('drawing map');
             this.drawMap();
             this.logo.appearTween.start();
+            this.groundSprite.fadeIn.start();
+            this.mapSprite.fadeIn.start();
+            this.phaserInstance.input.onDown.add(this.worldMapMouseDown, this);
         },
         drawMap: function(){
             _.each(this.provinces, function(province){
@@ -70,6 +89,12 @@ define(['lodash', 'provinceData', 'candy', 'province'], function(_, ProvinceData
             }, this);
             if(this.mapSprite) this.mapSprite.destroy();
             this.mapSprite = this.phaserInstance.add.sprite(0,0,this.mapBmp);
+            this.mapSprite.alpha = 0;
+            this.mapSprite.fadeIn = this.phaserInstance.add.tween(this.mapSprite)
+                .to({alpha: 1.0}, 2000, Phaser.Easing.Linear.None);
+            this.mapSprite.fadeOut = this.phaserInstance.add.tween(this.mapSprite)
+                .to({alpha: 0}, 2000, Phaser.Easing.Linear.None);
+            this.mapSprite.fadeOut.start();
         },
         drawProvince: function(province){
             var polygonPoints = [];
@@ -91,7 +116,9 @@ define(['lodash', 'provinceData', 'candy', 'province'], function(_, ProvinceData
             province.polyDrawer = this.phaserInstance.add.graphics(0,0);
             province.polygon = new Phaser.Polygon(polygonPoints);
             province.polygonTween = this.phaserInstance.add.tween(province.polyDrawer)
-                .to({x:-(maxX/2)+ 100, y:-(maxY/2)+ 100}, 1000, Phaser.Easing.Linear.None);
+                .to({x:-(maxX/2)+ 100, y:-(maxY/2)+ 100}, 1000, Phaser.Easing.Linear.None)
+                .to({x:-(maxX/2)+ 110, y:-(maxY/2)+ 110}, 3000, Phaser.Easing.Linear.None)
+                .to({x:-1000, y:-1000}, 1000, Phaser.Easing.Linear.None);
             province.polygonSizeTween = this.phaserInstance.add.tween(province.polyDrawer.scale)
                 .to({x:2, y:2}, 1000, Phaser.Easing.Linear.None);
 
