@@ -7,7 +7,10 @@ require.config({
         'simperialismApp': 'src/game',
         'worldmap': 'src/worldmap',
         'province': 'src/province',
-        'provinceData': 'src/provinceData'
+        'provinceData': 'src/provinceData',
+        'unit': 'src/unit',
+        'unitData' : 'src/unitData',
+        'base': 'src/base'
     },
     shim: {
         'phaser': {

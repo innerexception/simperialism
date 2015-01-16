@@ -53,6 +53,9 @@ define(['lodash', 'provinceData', 'candy', 'province'], function(_, ProvinceData
                     }
                 }, this);
             }
+            if(this.activeProvince){
+                this.activeProvince.update();
+            }
         },
         worldMapMouseDown: function(){
             var position = this.phaserInstance.input.activePointer.position;
@@ -60,6 +63,7 @@ define(['lodash', 'provinceData', 'candy', 'province'], function(_, ProvinceData
                 if(province.polygon ? province.polygon.contains(position.x, position.y): false){
                     //Transition to this province
                     this.transitionFrom(province.transitionTo, province);
+                    this.activeProvince = province;
                 }
             }, this);
         },

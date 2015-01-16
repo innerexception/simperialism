@@ -117,7 +117,13 @@ define(['phaser'], function(Phaser){
         Candy.logoSub.flicker.to({alpha: 0}, 50, Phaser.Easing.Linear.None, true, 0, 40);
         Candy.logoSub.flicker.start();
     };
-    
+
+    Candy.getObjectFromSprite = function(sprite) {
+        return _.find(this.units, function(unit){
+            return unit.sprite === sprite;
+        }, this);
+    };
+
     return Candy;
 
 });
