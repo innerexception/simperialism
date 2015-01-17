@@ -50,10 +50,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="province.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="province.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/src/province.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="98" column="36" selection-start="4463" selection-end="4463" vertical-scroll-proportion="0.5320366" vertical-offset="1031" max-vertical-offset="2584">
+            <state line="98" column="36" selection-start="4463" selection-end="4463" vertical-scroll-proportion="0.0" vertical-offset="1031" max-vertical-offset="2584">
               <folding>
                 <element signature="e#3368#3781#0" expanded="false" />
               </folding>
@@ -61,10 +61,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="unit.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="unit.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/src/unit.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="32" column="83" selection-start="1443" selection-end="1463" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1139">
+            <state line="72" column="13" selection-start="3065" selection-end="3065" vertical-scroll-proportion="0.9221968" vertical-offset="418" max-vertical-offset="1496">
               <folding />
             </state>
           </provider>
@@ -121,8 +121,8 @@
       <list>
         <option value="$PROJECT_DIR$/js/src/game.js" />
         <option value="$PROJECT_DIR$/js/lib/candy.js" />
-        <option value="$PROJECT_DIR$/js/src/unit.js" />
         <option value="$PROJECT_DIR$/js/src/province.js" />
+        <option value="$PROJECT_DIR$/js/src/unit.js" />
       </list>
     </option>
   </component>
@@ -678,26 +678,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/js/src/province.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="98" column="36" selection-start="4463" selection-end="4463" vertical-scroll-proportion="0.0" vertical-offset="1031" max-vertical-offset="2584">
+          <folding>
+            <element signature="e#3368#3781#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/js/lib/phaser.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="52452" column="4" selection-start="1547310" selection-end="1547310" vertical-scroll-proportion="0.33295193" vertical-offset="890917" max-vertical-offset="1381505">
+        <state line="53713" column="4" selection-start="1603428" selection-end="1603428" vertical-scroll-proportion="0.33295193" vertical-offset="912354" max-vertical-offset="1381505">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/src/unit.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="83" selection-start="1443" selection-end="1463" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1139">
+        <state line="72" column="13" selection-start="3065" selection-end="3065" vertical-scroll-proportion="0.9221968" vertical-offset="418" max-vertical-offset="1496">
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/src/province.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="98" column="36" selection-start="4463" selection-end="4463" vertical-scroll-proportion="0.5320366" vertical-offset="1031" max-vertical-offset="2584">
-          <folding>
-            <element signature="e#3368#3781#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>

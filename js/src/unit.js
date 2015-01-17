@@ -29,11 +29,17 @@ define(['candy'], function(Candy){
                    this.phaserInstance.physics.arcade.overlap(this.bulletCollisionGroup, this.sprite, this.unitBulletCollision, null, this);
                }
                //Run unit AI:
+               //move aimlessly
                //Move towards enemy if in sight range
-               this.phaserInstance.physics.arcade.overlap(this.bulletCollisionGroup, this.sightBox, this.accelerateToEnemy, null, this);
-               //Otherwise move aimlessly
-               //Unless near unique unit, then stay near him until dismissed
-
+               //Unless near unique unit under orders, then stay near him until dismissed
+               if(this.underOrders){
+                   this.followLeader();
+               }
+               else if(this.phaserInstance.physics.arcade.overlap(this.bulletCollisionGroup, this.sightBox, this.accelerateToEnemy, null, this)){
+               }
+               else{
+                   this.wander();
+               }
                this.sightBox.x = this.sprite.x;
                this.sightBox.y = this.sprite.y;
            }
@@ -54,7 +60,22 @@ define(['candy'], function(Candy){
        },
        accelerateToEnemy: function(thisSprite, bulletSprite){
            console.log('near some asshole.');
-           this.phaserInstance.physics.arcade.accelerateToObject(this.sprite, bulletSprite);
+           this.phaserInstance.physics.arcade.accelerateToObject(this.sprite, bulletSprite, 60, 60,60);
+       },
+       wander: function(){
+            if(this.directionTimer >=0){
+                this.directionTimer -= 1;
+            }
+           else{
+                this.directionTimer = 100;
+                this.phaserInstance.physics.arcade.accelerateToXY(this.sprite, Math.random()*this.phaserInstance.world.width,
+                    Math.random()*this.phaserInstance.world.height, 30, 30, 30);
+            }
+       },
+       followLeader: function(){
+           if(this.leader){
+               this.phaserInstance.physics.arcade.accelerateToObject(this.sprite, this.leader, 30, 30, 30);
+           }
        }
    };
 
