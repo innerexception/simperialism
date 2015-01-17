@@ -118,8 +118,8 @@ define(['phaser'], function(Phaser){
         Candy.logoSub.flicker.start();
     };
 
-    Candy.getObjectFromSprite = function(sprite) {
-        return _.find(this.units, function(unit){
+    Candy.getObjectFromSprite = function(sprite, collection) {
+        return _.find(collection, function(unit){
             return unit.sprite === sprite;
         }, this);
     };

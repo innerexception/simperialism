@@ -48,9 +48,9 @@ define(['phaser', 'lodash', 'candy', 'worldmap', 'provinceData'], function(Phase
             this.world.setBounds(0, 0, 1024, 768);
             //Camera init
             this.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
-            this.physics.startSystem(Phaser.Physics.P2JS);
-            this.physics.p2.setImpactEvents(true);
-            this.physics.p2.restitution = 0.8;
+            this.physics.startSystem(Phaser.Physics.ARCADE);
+            //  Enable the QuadTree
+            //this.physics.arcade.skipQuadTree = false;
             this.loadComplete.dispatch();
         },
 

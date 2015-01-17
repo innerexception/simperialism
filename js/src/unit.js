@@ -5,11 +5,13 @@ define(['candy'], function(Candy){
        this.bulletCollisionGroup = bulletCollisionGroup;
        this.isFighting = false;
        this.sprite = sprite;
+       this.sightBox = phaserInstance.add.sprite(this.sprite.x, this.sprite.y, 'sightBox');
+       phaserInstance.physics.enable(this.sightBox, Phaser.Physics.ARCADE);
        this.phaserInstance = phaserInstance;
        if(unitData.type === 'military'){
            this.bullets = this.phaserInstance.add.group();
            this.bullets.enableBody();
-           this.bullets.physicsBodyType = Phaser.Physics.P2JS;
+           this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
        }
    };
 
@@ -24,12 +26,16 @@ define(['candy'], function(Candy){
                    else{
                        this.bulletInterval -= 1;
                    }
-                   this.bullets.collides(this.bulletCollisionGroup, this.unitBulletCollision, this);
+                   this.phaserInstance.physics.arcade.overlap(this.bulletCollisionGroup, this.sprite, this.unitBulletCollision, null, this);
                }
                //Run unit AI:
                //Move towards enemy if in sight range
+               this.phaserInstance.physics.arcade.overlap(this.bulletCollisionGroup, this.sightBox, this.accelerateToEnemy, null, this);
                //Otherwise move aimlessly
                //Unless near unique unit, then stay near him until dismissed
+
+               this.sightBox.x = this.sprite.x;
+               this.sightBox.y = this.sprite.y;
            }
        },
        unitBulletCollision: function(bulletSprite, unitSprite) {
@@ -46,14 +52,9 @@ define(['candy'], function(Candy){
                that.sprite.destroy();
            }, 30000);
        },
-       accelerateToXY: function(x, y, speed) {
-           if (!speed) {
-               speed = 60;
-           }
-           var angle = Math.atan2(y - this.sprite.y, x - this.sprite.x);
-           //this.sprite.body.rotation = this.isFriendly ? 0 : this.phaserInstance.math.degToRad(180);  // correct angle of angry bullets (depends on the sprite used)
-           this.sprite.body.force.x = Math.cos(angle) * speed;    // accelerateToObject
-           this.sprite.body.force.y = Math.sin(angle) * speed;
+       accelerateToEnemy: function(thisSprite, bulletSprite){
+           console.log('near some asshole.');
+           this.phaserInstance.physics.arcade.accelerateToObject(this.sprite, bulletSprite);
        }
    };
 

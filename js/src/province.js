@@ -5,15 +5,11 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
 
        this.friendlyUnitsGroup = this.phaserInstance.add.group();
        this.friendlyUnitsGroup.enableBody = true;
-       this.friendlyUnitsGroup.physicsBodyType = Phaser.Physics.P2JS;
+       this.friendlyUnitsGroup.physicsBodyType = Phaser.Physics.ARCADE;
 
        this.enemyUnitsGroup = this.phaserInstance.add.group();
        this.enemyUnitsGroup.enableBody = true;
-       this.enemyUnitsGroup.physicsBodyType = Phaser.Physics.P2JS;
-
-       this.friendlyUnitCollisionGroup = this.phaserInstance.physics.p2.createCollisionGroup();
-       this.enemyUnitCollisionGroup = this.phaserInstance.physics.p2.createCollisionGroup();
-       this.phaserInstance.physics.p2.updateBoundsCollisionGroup();
+       this.enemyUnitsGroup.physicsBodyType = Phaser.Physics.ARCADE;
 
        this.fights = [];
        this.name = provinceData.name;
@@ -40,6 +36,9 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
                //Update bases
                this.enemyBase.update();
                this.friendlyBase.update();
+
+               this.phaserInstance.physics.arcade.overlap(this.friendlyUnitsGroup, this.enemyUnitsGroup, this.unitMeleeCollision, null, this);
+
            }
            _.each(this.units, function(unit){
                unit.update();
@@ -73,7 +72,6 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
            this.layer.alpha = 0;
            this.layer.resizeWorld();
            this.tileMap.setCollisionBetween(9, 11);
-           this.phaserInstance.physics.p2.convertTilemap(this.tileMap, this.layer);
 
            var layerTween = this.phaserInstance.add.tween(this.layer)
                .to({alpha: 1}, 2000, Phaser.Easing.Linear.None);
@@ -96,19 +94,17 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
            unit.animations.add('right', [4,5,6], 5, true);
            unit.animations.add('up', [7,8,9], 5, true);
            unit.animations.add('down', [10,11,12], 5, true);
-           unit.body.setCollisionGroup(isFriendly ? this.friendlyUnitCollisionGroup : this.enemyUnitCollisionGroup);
-           var targetCollisionGroup = isFriendly ? this.enemyUnitCollisionGroup : this.friendlyUnitCollisionGroup;
-           unit.body.collides(targetCollisionGroup, this.unitMeleeCollision, this);
-           var newUnit = new Unit(x, y, unitType, this.phaserInstance, unit, isFriendly, targetCollisionGroup)
+           var targetCollisionGroup = isFriendly ? this.enemyUnitsGroup : this.friendlyUnitsGroup;
+           var newUnit = new Unit(x, y, unitType, this.phaserInstance, unit, isFriendly, targetCollisionGroup);
            this.units.push(newUnit);
-           var position = this.phaserInstance.input.activePointer.position;
-           newUnit.accelerateToXY(position.x, position.y, 1000);
+           this.phaserInstance.physics.arcade.accelerateToPointer(unit);
        },
        unitMeleeCollision: function(attackerSprite, defenderSprite){
            //Put these two in the fight list so they can't collide with each other anymore
+           console.log('fight started.');
            var fight = {
-               attacker:Candy.getObjectFromSprite(attackerSprite),
-               defender:Candy.getObjectFromSprite(defenderSprite),
+               attacker:Candy.getObjectFromSprite(attackerSprite, this.units),
+               defender:Candy.getObjectFromSprite(defenderSprite, this.units),
                sprite:this.phaserInstance.add.sprite(attackerSprite.x, attackerSprite.y, 'fight'),
                timeLeft: 300
            };
@@ -117,14 +113,13 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
            fight.defender.isFighting = true;
 
            fight.sprite.animations.add('fight', [1,2,3],5, true);
-           fight.sprite.animations.start('fight');
+           fight.sprite.animations.play('fight');
            this.fights.push(fight);
        },
        resetDrawingContext: function(){
            if(this.tileMap){
                this.tileMap.destroy();
                this.layer.destroy();
-               this.baseLayer.destroy();
            }
        },
        updateFights: function(){
@@ -134,6 +129,7 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
                    fight.timeLeft-=1;
                }
                else{
+                   fight.sprite.kill();
                    fight.sprite.destroy();
                    if(Math.random() * 100 > 50){
                        //Attacker wins
