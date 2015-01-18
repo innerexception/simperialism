@@ -42,6 +42,29 @@ define(['candy'], function(Candy){
                }
                this.sightBox.x = this.sprite.x;
                this.sightBox.y = this.sprite.y;
+
+               if(this.sprite.body.velocity.x > 0){
+                   if(this.sprite.body.velocity.y < 20 && this.sprite.body.velocity.y > 0){
+                       this.sprite.animations.play('right');
+                   }
+                   else if(this.sprite.body.velocity.y > 20){
+                       this.sprite.animations.play('down');
+                   }
+                   else if(this.sprite.body.velocity.y < -20){
+                       this.sprite.animations.play('up');
+                   }
+               }
+               else{
+                   if(this.sprite.body.velocity.y < 20 && this.sprite.body.velocity.y > 0){
+                       this.sprite.animations.play('left');
+                   }
+                   else if(this.sprite.body.velocity.y > 20){
+                       this.sprite.animations.play('down');
+                   }
+                   else if(this.sprite.body.velocity.y < -20){
+                       this.sprite.animations.play('up');
+                   }
+               }
            }
        },
        unitBulletCollision: function(bulletSprite, unitSprite) {
@@ -61,7 +84,7 @@ define(['candy'], function(Candy){
            }, 30000);
        },
        accelerateToEnemy: function(thisSprite, bulletSprite){
-           console.log('near some asshole.');
+           //console.log('near some asshole.');
            this.phaserInstance.physics.arcade.accelerateToObject(this.sprite, bulletSprite, 60, 60,60);
        },
        wander: function(){

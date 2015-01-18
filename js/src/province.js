@@ -97,12 +97,13 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
            var unit = isFriendly ? this.friendlyUnitsGroup.create(x, y, unitType.sprite) : this.enemyUnitsGroup.create(x, y, unitType.sprite);
            unit.animations.add('left', [1,2,3], 5, true);
            unit.animations.add('right', [4,5,6], 5, true);
-           unit.animations.add('up', [7,8,9], 5, true);
-           unit.animations.add('down', [10,11,12], 5, true);
+           unit.animations.add('down', [7,8,9], 5, true);
+           unit.animations.add('up', [10,11,12], 5, true);
+           unit.animations.add('die', [13,14,15], 5, true);
+
            var targetCollisionGroup = isFriendly ? this.enemyUnitsGroup : this.friendlyUnitsGroup;
            var newUnit = new Unit(x, y, unitType, this.phaserInstance, unit, isFriendly, targetCollisionGroup);
            this.units.push(newUnit);
-           //this.phaserInstance.physics.arcade.accelerateToPointer(unit);
        },
        unitMeleeCollision: function(attackerSprite, defenderSprite){
            //Put these two in the fight list so they can't collide with each other anymore
