@@ -52,10 +52,12 @@ define(['candy'], function(Candy){
        die: function(){
            //U dead. Bodies stay for 30 secs
            this.sprite.animations.play('die');
-           this.sprite.kill();
            var that = this;
            window.setTimeout(function(){
+               console.log('removing a body');
+               that.sprite.kill();
                that.sprite.destroy();
+               delete that.sprite;
            }, 30000);
        },
        accelerateToEnemy: function(thisSprite, bulletSprite){

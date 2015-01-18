@@ -41,8 +41,13 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
 
            }
            _.each(this.units, function(unit){
-               unit.update();
-           });
+               if(unit && unit.sprite){
+                   unit.update();
+               }
+               else{
+                   this.units.splice(this.units.indexOf(unit), 1);
+               }
+           }, this);
 
            this.updateFights();
 
@@ -101,20 +106,31 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
        },
        unitMeleeCollision: function(attackerSprite, defenderSprite){
            //Put these two in the fight list so they can't collide with each other anymore
-           console.log('fight started.');
-           var fight = {
-               attacker:Candy.getObjectFromSprite(attackerSprite, this.units),
-               defender:Candy.getObjectFromSprite(defenderSprite, this.units),
-               sprite:this.phaserInstance.add.sprite(attackerSprite.x, attackerSprite.y, 'fight'),
-               timeLeft: 300
-           };
+           var attacker=Candy.getObjectFromSprite(attackerSprite, this.units);
+           var defender=Candy.getObjectFromSprite(defenderSprite, this.units);
+           if(attacker && !attacker.isFighting && defender && !defender.isFighting){
+            var fight = {
+                attacker:attacker,
+                defender:defender,
+                sprite:this.phaserInstance.add.sprite(attackerSprite.x, attackerSprite.y, 'fight'),
+                timeLeft: 300
+            };
+            console.log('fight started.');
+            fight.attacker.isFighting = true;
+            fight.attacker.sprite.body.velocity.x = 0;
+            fight.attacker.sprite.body.velocity.y = 0;
+            fight.attacker.sprite.body.acceleration.x = 0;
+            fight.attacker.sprite.body.acceleration.y = 0;
+            fight.defender.isFighting = true;
+            fight.defender.sprite.body.velocity.x = 0;
+            fight.defender.sprite.body.velocity.y = 0;
+            fight.defender.sprite.body.acceleration.x = 0;
+            fight.defender.sprite.body.acceleration.y = 0;
 
-           fight.attacker.isFighting = true;
-           fight.defender.isFighting = true;
-
-           fight.sprite.animations.add('fight', [1,2,3],5, true);
-           fight.sprite.animations.play('fight');
-           this.fights.push(fight);
+            fight.sprite.animations.add('fight', [1,2,3,4,5],5, true);
+            fight.sprite.animations.play('fight');
+            this.fights.push(fight);
+           }
        },
        resetDrawingContext: function(){
            if(this.tileMap){
@@ -129,8 +145,10 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
                    fight.timeLeft-=1;
                }
                else{
+                   console.log('garbage collecting a fight.');
                    fight.sprite.kill();
                    fight.sprite.destroy();
+
                    if(Math.random() * 100 > 50){
                        //Attacker wins
                        fight.attacker.isFighting = false;
@@ -147,8 +165,7 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
                }
            }, this);
            _.each(deleteIndexes, function(index){
-               console.log('garbage collecting a fight.');
-               this.fights = this.fights.splice(index, 1);
+               this.fights.splice(index, 1);
            },this);
        }
    };
