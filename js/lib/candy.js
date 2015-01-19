@@ -13,7 +13,19 @@ define(['phaser'], function(Phaser){
         lightGreen: '#d7e894',
         green: '#aec440',
         darkGreen: '#527f39',
-        extraDarkGreen: '#204631'
+        extraDarkGreen: '#204631',
+        lightBrownHex: 0xe6d69c,
+        mediumBrownHex: 0xb4a56a,
+        darkBrownHex: 0x7b7162,
+        extraDarkBrownHex: 0x393829,
+        extraDarkBlueGreenHex: 0x183030,
+        darkBlueGreenHex: 0x507868,
+        blueGreenHex: 0xa8c0b0,
+        lightBlueGreenHex: 0xe0f0e8,
+        lightGreenHex: 0xd7e894,
+        greenHex: 0xaec440,
+        darkGreenHex: 0x527f39,
+        extraDarkGreenHex: 0x204631
     };
     Candy.drawTooltip = function (phaserInstance, x, y, text, fontSiez, delay) {
         if (!Candy.tooltips[text]) {

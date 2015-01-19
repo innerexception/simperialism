@@ -22,23 +22,38 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
            .to({x:-100, y:-100}, 500, Phaser.Easing.Linear.None);
        this.nameText.nameTextTween._lastChild.onComplete.add(function(){
            this.enableUI = true;
+           this.updateUI();
        }, this);
 
        this.spawnSignal = new Phaser.Signal();
        this.spawnSignal.add(this.spawnUnit, this);
+
+       this.UICtx = this.phaserInstance.add.graphics(0,0);
+       this.spawnerHandleCtx = this.phaserInstance.add.graphics(0,0);
+
+       this.enemyUnitCount = 0;
+       this.friendlyUnitCount = 0;
+       this.bottomLeftPoint = {x:this.phaserInstance.camera.view.width/2, y:this.phaserInstance.camera.view.height - 20};
+       var triangle = new Phaser.Polygon([this.bottomLeftPoint,
+           {x:this.bottomLeftPoint.x+75, y:this.bottomLeftPoint.y},
+           {x:this.bottomLeftPoint.x+37, y:this.bottomLeftPoint.y-75}]);
+       this.spawnerHandle = {x:this.bottomLeftPoint.x, y:this.bottomLeftPoint.y, isDragging: false, triangle: triangle};
    };
 
    Province.prototype = {
        update: function(){
            if(this.enableUI){
-               //Draw spawner controls / unique unit status / push-pull bar
-
                //Update bases
                this.enemyBase.update();
                this.friendlyBase.update();
 
                this.phaserInstance.physics.arcade.overlap(this.friendlyUnitsGroup, this.enemyUnitsGroup, this.unitMeleeCollision, null, this);
-
+               this.phaserInstance.physics.arcade.collide(this.friendlyUnitsGroup, this.layer);
+               this.phaserInstance.physics.arcade.collide(this.enemyUnitsGroup, this.layer);
+               this.phaserInstance.physics.arcade.collide(this.enemyUnitsGroup, this.friendlyBase, this.enemySpawnInFriendlyBase, null, this);
+               this.phaserInstance.physics.arcade.collide(this.friendlyUnitsGroup, this.enemyBase, this.tryEnterEnemyBase, null, this);
+               this.phaserInstance.physics.arcade.collide(this.enemyUnitsGroup, this.enemyBase, this.enemySpawnInEnemyBase, null, this);
+               this.phaserInstance.physics.arcade.collide(this.friendlyBase, this.friendlyBase, this.friendlySpawnInFriendlyBase, null, this);
            }
            _.each(this.units, function(unit){
                if(unit && unit.sprite){
@@ -50,6 +65,61 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
            }, this);
 
            this.updateFights();
+
+           if(this.spawnerHandle.isDragging){
+               var position = this.phaserInstance.input.activePointer.position;
+               if(this.spawnerHandle.triangle.contains(position.x, position.y)){
+                   this.spawnerHandle.x = this.phaserInstance.input.activePointer.position.x;
+                   this.spawnerHandle.y = this.phaserInstance.input.activePointer.position.y;
+                   this.spawnerHandle.int = Phaser.Math.distance(this.spawnerHandle.triangle._points[0].x, this.spawnerHandle.triangle._points[0].y, this.spawnerHandle.x, this.spawnerHandle.y);
+                   this.spawnerHandle.mil = Phaser.Math.distance(this.spawnerHandle.triangle._points[1].x, this.spawnerHandle.triangle._points[1].y, this.spawnerHandle.x, this.spawnerHandle.y);
+                   this.spawnerHandle.oli = Phaser.Math.distance(this.spawnerHandle.triangle._points[2].x, this.spawnerHandle.triangle._points[2].y, this.spawnerHandle.x, this.spawnerHandle.y);
+                   console.log(this.spawnerHandle.int + ' int, '+ this.spawnerHandle.mil + ' mil, '+ this.spawnerHandle.oli + ' oli, ');
+                   this.friendlyBase.setSpawnDistribution({rawInt: this.spawnerHandle.int, rawMil: this.spawnerHandle.mil, rawOli: this.spawnerHandle.oli});
+                   this.updateSpawnerHandle();
+               }
+           }
+       },
+       updateUI: function(){
+           this.UICtx.clear();
+
+           //push-pull bar
+           this.UICtx.beginFill(Candy.gameBoyPalette.blueGreenHex, 0.7);
+           this.UICtx.drawRect(this.bottomLeftPoint.x-200,
+               this.bottomLeftPoint.y - 20,
+               this.friendlyUnitPercentage*100, 20);
+           this.UICtx.endFill();
+           this.UICtx.beginFill(Candy.gameBoyPalette.darkBlueGreenHex, 0.7);
+           this.UICtx.drawRect(this.bottomLeftPoint.x-200 + (this.friendlyUnitPercentage * 100),
+               this.bottomLeftPoint.y - 20,
+               this.enemyUnitPercentage*100, 20);
+           this.UICtx.endFill();
+
+           //unique unit status: rectangle with copy of sprite in it with infinite walk animation, bg color changes if fighting or any enemy in base
+
+           this.updateSpawnerHandle();
+       },
+       updateSpawnerHandle: function(){
+           this.spawnerHandleCtx.clear();
+           //Spawner control triangle
+           this.spawnerHandleCtx.beginFill(Candy.gameBoyPalette.lightBlueGreenHex, 0.7);
+           this.spawnerHandleCtx.drawTriangle([this.bottomLeftPoint, {x:this.bottomLeftPoint.x+75, y:this.bottomLeftPoint.y}, {x:this.bottomLeftPoint.x+37, y:this.bottomLeftPoint.y-75}]);
+           this.spawnerHandleCtx.endFill();
+           //Spawner control draggable indicator
+           this.spawnerHandleCtx.beginFill(Candy.gameBoyPalette.darkGreenHex, 0.7);
+           this.spawnerHandleCtx.drawCircle(this.spawnerHandle.x, this.spawnerHandle.y, 10);
+           this.spawnerHandleCtx.endFill();
+       },
+       enemySpawnInFriendlyBase: function(){
+
+       },
+       tryEnterEnemyBase: function(){
+
+       },
+       enemySpawnInEnemyBase: function(){
+
+       },
+       friendlySpawnInFriendlyBase: function(){
 
        },
        transitionTo: function(){
@@ -76,11 +146,26 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
 
            this.layer.alpha = 0;
            this.layer.resizeWorld();
-           this.tileMap.setCollisionBetween(9, 11);
+           this.tileMap.setCollisionBetween(9, 11, true, 'surface', true);
 
            var layerTween = this.phaserInstance.add.tween(this.layer)
                .to({alpha: 1}, 2000, Phaser.Easing.Linear.None);
            layerTween.start();
+
+           this.layer.inputEnabled = true;
+           this.layer.events.onInputDown.add(this.onProvinceClick, this);
+           this.layer.events.onInputUp.add(this.onProvinceDragEnd, this);
+
+       },
+       onProvinceClick: function(){
+            var position = this.phaserInstance.input.activePointer.position;
+            if(Phaser.Circle.contains(new Phaser.Circle(this.spawnerHandle.x, this.spawnerHandle.y, 10), position.x, position.y)){
+                console.log('started dragging spawn handle');
+                this.spawnerHandle.isDragging = true;
+            }
+       },
+       onProvinceDragEnd: function(){
+            this.spawnerHandle.isDragging = false;
        },
        createBaseView: function(){
            this.resetDrawingContext();
@@ -114,6 +199,18 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
            unit.inputEnabled = true;
            unit.events.onInputDown.add(this.onLeaderSelect, this);
 
+           this.updateUnitCount(1, isFriendly);
+           this.updateUI();
+       },
+       updateUnitCount: function(amount, isFriendly){
+           if(isFriendly){
+               this.friendlyUnitCount+=amount;
+               this.friendlyUnitPercentage = this.friendlyUnitCount / (this.friendlyUnitCount + this.enemyUnitCount);
+           }
+           else{
+               this.enemyUnitCount+=amount;
+               this.enemyUnitPercentage = this.enemyUnitCount / (this.friendlyUnitCount + this.enemyUnitCount);
+           }
        },
        onLeaderSelect: function(unitSprite){
            var object = Candy.getObjectFromSprite(unitSprite, this.units);
@@ -170,8 +267,10 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
                }
                else{
                    console.log('garbage collecting a fight.');
-                   fight.sprite.kill();
-                   fight.sprite.destroy();
+                   if(fight.sprite.alive){
+                       fight.sprite.kill();
+                       fight.sprite.destroy();
+                   }
 
                    if(Math.random() * 100 > 50){
                        //Attacker wins
@@ -180,9 +279,10 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
                            _.each(this.units, function(unit){
                                delete unit.leader;
                            });
+                           delete this.friendlyLeader;
                        }
                        fight.defender.die();
-                       delete this.friendlyLeader;
+                       this.updateUnitCount(-1, fight.defender.isFriendly);
                        console.log('attacker won a fight.');
                    }
                    else{
@@ -192,9 +292,10 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
                            _.each(this.units, function(unit){
                                delete unit.leader;
                            });
+                           delete this.friendlyLeader;
                        }
                        fight.attacker.die();
-                       delete this.friendlyLeader;
+                       this.updateUnitCount(-1, fight.attacker.isFriendly);
                        console.log('defender won a fight.');
                    }
                    deleteIndexes.push(this.fights.indexOf(fight));

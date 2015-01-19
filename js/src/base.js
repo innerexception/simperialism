@@ -19,6 +19,8 @@ define(['unitData'], function(UnitTypes){
                    .to({x:1, y:1}, 1000, Phaser.Easing.Bounce.Out);
                this.sprite.appear.start();
                this.sprite.animations.add('spawn', [2,3,4,5,6], 5, false);
+               this.phaserInstance.physics.enable(this.sprite);
+               this.sprite.body.immovable = true;
            }
            if(this.spawnDelay >= 0){
                this.spawnDelay -= 1;
@@ -26,8 +28,11 @@ define(['unitData'], function(UnitTypes){
            else{
                console.log('spawning a dude.');
                this.spawnSignal.dispatch(this.sprite.x, this.sprite.y, UnitTypes.Intelligencia, this.isFriendly);
-               this.spawnDelay = 100;
+               this.spawnDelay = (Math.random() * 100)+50;
            }
+       },
+       setSpawnDistribution: function(rawNumbers){
+           
        }
    };
 
