@@ -6,6 +6,9 @@ define(['unitData'], function(UnitTypes){
        this.y = y;
        this.isFriendly = isFriendly;
        this.spawnDelay = 100;
+       this.intRate = {};
+       this.milRate = {};
+       this.oliRate = {};
    };
 
    Base.prototype = {
@@ -18,7 +21,7 @@ define(['unitData'], function(UnitTypes){
                this.sprite.appear = this.phaserInstance.add.tween(this.sprite.scale)
                    .to({x:1, y:1}, 1000, Phaser.Easing.Bounce.Out);
                this.sprite.appear.start();
-               this.sprite.animations.add('spawn', [2,3,4,5,6], 5, false);
+               this.sprite.animations.add('spawn', [1,2,3,4,5,6], 5, false);
                this.phaserInstance.physics.enable(this.sprite);
                this.sprite.body.immovable = true;
            }
@@ -26,13 +29,31 @@ define(['unitData'], function(UnitTypes){
                this.spawnDelay -= 1;
            }
            else{
-               console.log('spawning a dude.');
-               this.spawnSignal.dispatch(this.sprite.x, this.sprite.y, UnitTypes.Intelligencia, this.isFriendly);
-               this.spawnDelay = (Math.random() * 100)+50;
+               var seed = Math.random();
+               var nextType;
+
+               if(seed <= this.intRate.max){
+                   nextType = UnitTypes.Intelligencia;
+               }
+               else if(seed <= this.milRate.max){
+                   nextType = UnitTypes.Miltary;
+               }
+               else{
+                   nextType = UnitTypes.Oligarch;
+               }
+
+               console.log('spawning a '+nextType.type);
+               this.spawnSignal.dispatch(this.sprite.x, this.sprite.y, nextType, this.isFriendly);
            }
        },
-       setSpawnDistribution: function(rawNumbers){
-           
+       setSpawnDistribution: function(rawInt, rawMil, rawOli){
+           var total = rawInt + rawMil + rawOli;
+           this.intRate.min = 0;
+           this.intRate.max = rawInt/total;
+           this.milRate.min = this.intRate.max;
+           this.milRate.max = (rawMil/total)+this.intRate.max;
+           this.oliRate.max = (rawOli/total) + this.intRate.max + this.milRate.max;
+           this.oliRate.min = this.milRate.min;
        }
    };
 

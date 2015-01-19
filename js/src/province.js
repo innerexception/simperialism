@@ -38,6 +38,11 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
            {x:this.bottomLeftPoint.x+75, y:this.bottomLeftPoint.y},
            {x:this.bottomLeftPoint.x+37, y:this.bottomLeftPoint.y-75}]);
        this.spawnerHandle = {x:this.bottomLeftPoint.x, y:this.bottomLeftPoint.y, isDragging: false, triangle: triangle};
+
+       this.intelligenciaCount ={friendly:0, enemy:0};
+       this.militaryCount = {friendly:0, enemy:0};
+       this.oligarchCount ={friendly:0, enemy:0};
+
    };
 
    Province.prototype = {
@@ -75,7 +80,7 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
                    this.spawnerHandle.mil = Phaser.Math.distance(this.spawnerHandle.triangle._points[1].x, this.spawnerHandle.triangle._points[1].y, this.spawnerHandle.x, this.spawnerHandle.y);
                    this.spawnerHandle.oli = Phaser.Math.distance(this.spawnerHandle.triangle._points[2].x, this.spawnerHandle.triangle._points[2].y, this.spawnerHandle.x, this.spawnerHandle.y);
                    console.log(this.spawnerHandle.int + ' int, '+ this.spawnerHandle.mil + ' mil, '+ this.spawnerHandle.oli + ' oli, ');
-                   this.friendlyBase.setSpawnDistribution({rawInt: this.spawnerHandle.int, rawMil: this.spawnerHandle.mil, rawOli: this.spawnerHandle.oli});
+                   this.friendlyBase.setSpawnDistribution(this.spawnerHandle.int, this.spawnerHandle.mil, this.spawnerHandle.oli);
                    this.updateSpawnerHandle();
                }
            }
@@ -190,11 +195,26 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
            var newUnit = new Unit(x, y, unitType, this.phaserInstance, unit, isFriendly, targetCollisionGroup);
            if(this.friendlyLeader && isFriendly)newUnit.leader = this.friendlyLeader;
            this.units.push(newUnit);
+
+           switch(unitType.type){
+               case 'military':
+                   isFriendly ? this.militaryCount.friendly++ : this.militaryCount.enemy++;
+                   break;
+               case 'intelligencia':
+                   isFriendly ? this.intelligenciaCount.friendly++ : this.intelligenciaCount.enemy++;
+                   break;
+               case 'oligarch':
+                   isFriendly ? this.oligarchCount.friendly++ : this.oligarchCount.enemy++;
+                   break;
+           }
+
            if(isFriendly){
                this.friendlyBase.sprite.animations.play('spawn');
+               this.friendlyBase.spawnDelay = 1000 - (this.intelligenciaCount.friendly + (this.oligarchCount.friendly*1.5));
            }
            else{
                this.enemyBase.sprite.animations.play('spawn');
+               this.enemyBase.spawnDelay = 1000 - (this.intelligenciaCount.enemy + (this.oligarchCount.enemy*1.5));
            }
            unit.inputEnabled = true;
            unit.events.onInputDown.add(this.onLeaderSelect, this);

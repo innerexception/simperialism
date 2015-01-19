@@ -11,7 +11,7 @@ define(['candy'], function(Candy){
        this.phaserInstance = phaserInstance;
        if(unitData.type === 'military'){
            this.bullets = this.phaserInstance.add.group();
-           this.bullets.enableBody();
+           this.bullets.enableBody = true;
            this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
        }
        this.sprite.spawnTween = this.phaserInstance.add.tween(this.sprite)
