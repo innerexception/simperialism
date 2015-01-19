@@ -39,7 +39,7 @@ define(['phaser', 'lodash', 'candy', 'worldmap', 'provinceData'], function(Phase
             _.each(ProvinceData, function(province){
                 this.load.tilemap(province.name+'_map', 'res/tilemaps/'+province.name+'_map.json', null, Phaser.Tilemap.TILED_JSON);
             }, this);
-            this.load.image('base', 'res/sprite/base.png');
+            this.load.spritesheet('base', 'res/sprite/base.png', 55, 55);
             this.load.image('surface_plains', 'res/sprite/surface_plains.png');
             this.load.image('sightBox', 'res/sprite/sightBox.png');
             //  Load the Google WebFont Loader script

@@ -95,15 +95,36 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
        },
        spawnUnit: function(x, y, unitType, isFriendly){
            var unit = isFriendly ? this.friendlyUnitsGroup.create(x, y, unitType.sprite) : this.enemyUnitsGroup.create(x, y, unitType.sprite);
-           unit.animations.add('left', [1,2,3], 5, true);
-           unit.animations.add('right', [4,5,6], 5, true);
-           unit.animations.add('down', [7,8,9], 5, true);
-           unit.animations.add('up', [10,11,12], 5, true);
-           unit.animations.add('die', [13,14,15], 5, true);
+           unit.animations.add('right', [0,1,2], 5, true);
+           unit.animations.add('left', [3,4,5], 5, true);
+           unit.animations.add('down', [6,7,8], 5, true);
+           unit.animations.add('up', [9,10,11], 5, true);
+           unit.animations.add('die', [12,13,14], 5, false);
 
            var targetCollisionGroup = isFriendly ? this.enemyUnitsGroup : this.friendlyUnitsGroup;
            var newUnit = new Unit(x, y, unitType, this.phaserInstance, unit, isFriendly, targetCollisionGroup);
+           if(this.friendlyLeader && isFriendly)newUnit.leader = this.friendlyLeader;
            this.units.push(newUnit);
+           if(isFriendly){
+               this.friendlyBase.sprite.animations.play('spawn');
+           }
+           else{
+               this.enemyBase.sprite.animations.play('spawn');
+           }
+           unit.inputEnabled = true;
+           unit.events.onInputDown.add(this.onLeaderSelect, this);
+
+       },
+       onLeaderSelect: function(unitSprite){
+           var object = Candy.getObjectFromSprite(unitSprite, this.units);
+           if(!object){console.log('clicked sprite with NO unit object!!'); return;}
+           if(object.isFriendly && !this.friendlyLeader){
+               this.friendlyLeader = object;
+               object.isLeader = true;
+               _.each(this.units, function(unit){
+                   if(!unit.isLeader && unit.isFriendly)unit.leader = object;
+               });
+           }
        },
        unitMeleeCollision: function(attackerSprite, defenderSprite){
            //Put these two in the fight list so they can't collide with each other anymore
@@ -128,6 +149,8 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
             fight.defender.sprite.body.acceleration.x = 0;
             fight.defender.sprite.body.acceleration.y = 0;
 
+            fight.sprite.scale.x = 2;
+            fight.sprite.scale.y = 2;
             fight.sprite.animations.add('fight', [1,2,3,4,5],5, true);
             fight.sprite.animations.play('fight');
             this.fights.push(fight);
@@ -153,13 +176,25 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
                    if(Math.random() * 100 > 50){
                        //Attacker wins
                        fight.attacker.isFighting = false;
+                       if(fight.defender.isLeader){
+                           _.each(this.units, function(unit){
+                               delete unit.leader;
+                           });
+                       }
                        fight.defender.die();
+                       delete this.friendlyLeader;
                        console.log('attacker won a fight.');
                    }
                    else{
                        //Defender wins
                        fight.defender.isFighting = false;
+                       if(fight.attacker.isLeader){
+                           _.each(this.units, function(unit){
+                               delete unit.leader;
+                           });
+                       }
                        fight.attacker.die();
+                       delete this.friendlyLeader;
                        console.log('defender won a fight.');
                    }
                    deleteIndexes.push(this.fights.indexOf(fight));

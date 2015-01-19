@@ -18,6 +18,7 @@ define(['unitData'], function(UnitTypes){
                this.sprite.appear = this.phaserInstance.add.tween(this.sprite.scale)
                    .to({x:1, y:1}, 1000, Phaser.Easing.Bounce.Out);
                this.sprite.appear.start();
+               this.sprite.animations.add('spawn', [2,3,4,5,6], 5, false);
            }
            if(this.spawnDelay >= 0){
                this.spawnDelay -= 1;
