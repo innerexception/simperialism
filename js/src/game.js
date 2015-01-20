@@ -36,6 +36,8 @@ define(['phaser', 'lodash', 'candy', 'worldmap', 'provinceData'], function(Phase
             this.load.spritesheet('fight', 'res/sprite/fight.png', 16, 16);
             this.load.spritesheet('intelligencia_surface_unit', 'res/sprite/intelligencia_surface_unit.png', 16, 16);
             this.load.spritesheet('military_surface_unit', 'res/sprite/military_surface_unit.png', 16, 16);
+            this.load.spritesheet('oligarch_surface_unit', 'res/sprite/oligarch_surface_unit.png', 16, 16);
+
             _.each(ProvinceData, function(province){
                 this.load.tilemap(province.name+'_map', 'res/tilemaps/'+province.name+'_map.json', null, Phaser.Tilemap.TILED_JSON);
             }, this);

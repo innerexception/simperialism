@@ -38,6 +38,9 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
            {x:this.bottomLeftPoint.x+75, y:this.bottomLeftPoint.y},
            {x:this.bottomLeftPoint.x+37, y:this.bottomLeftPoint.y-75}]);
        this.spawnerHandle = {x:this.bottomLeftPoint.x, y:this.bottomLeftPoint.y, isDragging: false, triangle: triangle};
+       this.spawnerHandle.int = 99;
+       this.spawnerHandle.mil = 1;
+       this.spawnerHandle.oli = 1;
 
        this.intelligenciaCount ={friendly:0, enemy:0};
        this.militaryCount = {friendly:0, enemy:0};
@@ -76,9 +79,9 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
                if(this.spawnerHandle.triangle.contains(position.x, position.y)){
                    this.spawnerHandle.x = this.phaserInstance.input.activePointer.position.x;
                    this.spawnerHandle.y = this.phaserInstance.input.activePointer.position.y;
-                   this.spawnerHandle.int = Phaser.Math.distance(this.spawnerHandle.triangle._points[0].x, this.spawnerHandle.triangle._points[0].y, this.spawnerHandle.x, this.spawnerHandle.y);
-                   this.spawnerHandle.mil = Phaser.Math.distance(this.spawnerHandle.triangle._points[1].x, this.spawnerHandle.triangle._points[1].y, this.spawnerHandle.x, this.spawnerHandle.y);
-                   this.spawnerHandle.oli = Phaser.Math.distance(this.spawnerHandle.triangle._points[2].x, this.spawnerHandle.triangle._points[2].y, this.spawnerHandle.x, this.spawnerHandle.y);
+                   this.spawnerHandle.int = 100-Phaser.Math.distance(this.spawnerHandle.triangle._points[0].x, this.spawnerHandle.triangle._points[0].y, this.spawnerHandle.x, this.spawnerHandle.y);
+                   this.spawnerHandle.mil = 100-Phaser.Math.distance(this.spawnerHandle.triangle._points[1].x, this.spawnerHandle.triangle._points[1].y, this.spawnerHandle.x, this.spawnerHandle.y);
+                   this.spawnerHandle.oli = 100-Phaser.Math.distance(this.spawnerHandle.triangle._points[2].x, this.spawnerHandle.triangle._points[2].y, this.spawnerHandle.x, this.spawnerHandle.y);
                    console.log(this.spawnerHandle.int + ' int, '+ this.spawnerHandle.mil + ' mil, '+ this.spawnerHandle.oli + ' oli, ');
                    this.friendlyBase.setSpawnDistribution(this.spawnerHandle.int, this.spawnerHandle.mil, this.spawnerHandle.oli);
                    this.updateSpawnerHandle();
@@ -108,8 +111,44 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
            this.spawnerHandleCtx.clear();
            //Spawner control triangle
            this.spawnerHandleCtx.beginFill(Candy.gameBoyPalette.lightBlueGreenHex, 0.7);
-           this.spawnerHandleCtx.drawTriangle([this.bottomLeftPoint, {x:this.bottomLeftPoint.x+75, y:this.bottomLeftPoint.y}, {x:this.bottomLeftPoint.x+37, y:this.bottomLeftPoint.y-75}]);
+           this.spawnerHandleCtx.drawTriangle([this.bottomLeftPoint,
+               {x:this.bottomLeftPoint.x+75, y:this.bottomLeftPoint.y},
+               {x:this.bottomLeftPoint.x+37, y:this.bottomLeftPoint.y-75}]);
            this.spawnerHandleCtx.endFill();
+
+           if(!this.spawnerIntLabel){
+               this.spawnerIntLabel = this.phaserInstance.add.sprite(this.bottomLeftPoint.x, this.bottomLeftPoint.y, 'intelligencia_surface_unit');
+               this.spawnerIntLabel.anchor.setTo(0.5);
+           }
+           else {
+               this.spawnerIntLabel.y = this.bottomLeftPoint.y;
+               this.spawnerIntLabel.x = this.bottomLeftPoint.x;
+               this.spawnerIntLabel.scale.x = this.spawnerHandle.int/30;
+               this.spawnerIntLabel.scale.y = this.spawnerHandle.int/30;
+           }
+
+           if(!this.spawnerMilLabel){
+               this.spawnerMilLabel = this.phaserInstance.add.sprite(this.bottomLeftPoint.x+75, this.bottomLeftPoint.y, 'military_surface_unit');
+               this.spawnerMilLabel.anchor.setTo(0.5);
+           }
+           else {
+               this.spawnerMilLabel.y = this.bottomLeftPoint.y;
+               this.spawnerMilLabel.x = this.bottomLeftPoint.x+75;
+               this.spawnerMilLabel.scale.x = this.spawnerHandle.mil/30;
+               this.spawnerMilLabel.scale.y = this.spawnerHandle.mil/30;
+           }
+
+           if(!this.spawnerOliLabel){
+               this.spawnerOliLabel = this.phaserInstance.add.sprite(this.bottomLeftPoint.x+37, this.bottomLeftPoint.y-75, 'oligarch_surface_unit');
+               this.spawnerOliLabel.anchor.setTo(0.5);
+           }
+           else {
+               this.spawnerOliLabel.y = this.bottomLeftPoint.y-75;
+               this.spawnerOliLabel.x = this.bottomLeftPoint.x+37;
+               this.spawnerOliLabel.scale.x = this.spawnerHandle.oli/30;
+               this.spawnerOliLabel.scale.y = this.spawnerHandle.oli/30;
+           }
+
            //Spawner control draggable indicator
            this.spawnerHandleCtx.beginFill(Candy.gameBoyPalette.darkGreenHex, 0.7);
            this.spawnerHandleCtx.drawCircle(this.spawnerHandle.x, this.spawnerHandle.y, 10);
