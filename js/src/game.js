@@ -33,6 +33,7 @@ define(['phaser', 'lodash', 'candy', 'worldmap', 'provinceData'], function(Phase
         preload: function () {
             //Load all assets here
             this.load.image('mapBackground', 'res/sprite/mapBG.png');
+            this.load.image('bullet', 'res/sprite/bullet.png');
             this.load.spritesheet('fight', 'res/sprite/fight.png', 16, 16);
             this.load.spritesheet('intelligencia_surface_unit', 'res/sprite/intelligencia_surface_unit.png', 16, 16);
             this.load.spritesheet('military_surface_unit', 'res/sprite/military_surface_unit.png', 16, 16);

@@ -6,10 +6,12 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
        this.friendlyUnitsGroup = this.phaserInstance.add.group();
        this.friendlyUnitsGroup.enableBody = true;
        this.friendlyUnitsGroup.physicsBodyType = Phaser.Physics.ARCADE;
+       this.friendlyUnitsGroup.collideWorldBounds = true;
 
        this.enemyUnitsGroup = this.phaserInstance.add.group();
        this.enemyUnitsGroup.enableBody = true;
        this.enemyUnitsGroup.physicsBodyType = Phaser.Physics.ARCADE;
+       this.enemyUnitsGroup.collideWorldBounds = true;
 
        this.fights = [];
        this.name = provinceData.name;
@@ -28,6 +30,9 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
        this.spawnSignal = new Phaser.Signal();
        this.spawnSignal.add(this.spawnUnit, this);
 
+       this.bulletSignal = new Phaser.Signal();
+       this.bulletSignal.add(this.unitBulletCollision, this);
+
        this.UICtx = this.phaserInstance.add.graphics(0,0);
        this.spawnerHandleCtx = this.phaserInstance.add.graphics(0,0);
 
@@ -38,9 +43,9 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
            {x:this.bottomLeftPoint.x+75, y:this.bottomLeftPoint.y},
            {x:this.bottomLeftPoint.x+37, y:this.bottomLeftPoint.y-75}]);
        this.spawnerHandle = {x:this.bottomLeftPoint.x, y:this.bottomLeftPoint.y, isDragging: false, triangle: triangle};
-       this.spawnerHandle.int = 99;
-       this.spawnerHandle.mil = 1;
-       this.spawnerHandle.oli = 1;
+       this.spawnerHandle.int = 94;
+       this.spawnerHandle.mil = 3;
+       this.spawnerHandle.oli = 3;
 
        this.intelligenciaCount ={friendly:0, enemy:0};
        this.militaryCount = {friendly:0, enemy:0};
@@ -79,9 +84,9 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
                if(this.spawnerHandle.triangle.contains(position.x, position.y)){
                    this.spawnerHandle.x = this.phaserInstance.input.activePointer.position.x;
                    this.spawnerHandle.y = this.phaserInstance.input.activePointer.position.y;
-                   this.spawnerHandle.int = 100-Phaser.Math.distance(this.spawnerHandle.triangle._points[0].x, this.spawnerHandle.triangle._points[0].y, this.spawnerHandle.x, this.spawnerHandle.y);
-                   this.spawnerHandle.mil = 100-Phaser.Math.distance(this.spawnerHandle.triangle._points[1].x, this.spawnerHandle.triangle._points[1].y, this.spawnerHandle.x, this.spawnerHandle.y);
-                   this.spawnerHandle.oli = 100-Phaser.Math.distance(this.spawnerHandle.triangle._points[2].x, this.spawnerHandle.triangle._points[2].y, this.spawnerHandle.x, this.spawnerHandle.y);
+                   this.spawnerHandle.int = 80-Phaser.Math.distance(this.spawnerHandle.triangle._points[0].x, this.spawnerHandle.triangle._points[0].y, this.spawnerHandle.x, this.spawnerHandle.y);
+                   this.spawnerHandle.mil = 80-Phaser.Math.distance(this.spawnerHandle.triangle._points[1].x, this.spawnerHandle.triangle._points[1].y, this.spawnerHandle.x, this.spawnerHandle.y);
+                   this.spawnerHandle.oli = 80-Phaser.Math.distance(this.spawnerHandle.triangle._points[2].x, this.spawnerHandle.triangle._points[2].y, this.spawnerHandle.x, this.spawnerHandle.y);
                    console.log(this.spawnerHandle.int + ' int, '+ this.spawnerHandle.mil + ' mil, '+ this.spawnerHandle.oli + ' oli, ');
                    this.friendlyBase.setSpawnDistribution(this.spawnerHandle.int, this.spawnerHandle.mil, this.spawnerHandle.oli);
                    this.updateSpawnerHandle();
@@ -222,6 +227,14 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
            this.phaserInstance.physics.p2.convertTilemap(this.tileMap, this.layer);
 
        },
+       unitBulletCollision: function(bulletSprite, unitSprite) {
+           var unit = Candy.getObjectFromSprite(unitSprite, this.units);
+           if (unit){
+               this.updateUnitCount(-1, unit.isFriendly);
+               unit.die();
+           }
+           bulletSprite.kill();
+       },
        spawnUnit: function(x, y, unitType, isFriendly){
            var unit = isFriendly ? this.friendlyUnitsGroup.create(x, y, unitType.sprite) : this.enemyUnitsGroup.create(x, y, unitType.sprite);
            unit.animations.add('right', [0,1,2], 5, true);
@@ -231,7 +244,7 @@ define(['lodash', 'candy', 'unit', 'base'], function(_, Candy, Unit, Base){
            unit.animations.add('die', [12,13,14], 5, false);
 
            var targetCollisionGroup = isFriendly ? this.enemyUnitsGroup : this.friendlyUnitsGroup;
-           var newUnit = new Unit(x, y, unitType, this.phaserInstance, unit, isFriendly, targetCollisionGroup);
+           var newUnit = new Unit(x, y, unitType, this.phaserInstance, unit, isFriendly, targetCollisionGroup, this.bulletSignal);
            if(this.friendlyLeader && isFriendly)newUnit.leader = this.friendlyLeader;
            this.units.push(newUnit);
 
